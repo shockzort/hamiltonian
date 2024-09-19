@@ -2,6 +2,7 @@ from __future__ import annotations
 import sys
 import plotly.graph_objects as go
 
+
 class discrete_point:
     x: int
     y: int
@@ -11,7 +12,10 @@ class discrete_point:
         self.y = y
 
     def is_neighbour(self, other: discrete_point) -> bool:
-        return (abs(self.x - other.x) == 1 and abs(self.y - other.y) == 0) or (abs(self.x - other.x) == 0 and abs(self.y - other.y) == 1)
+        return (abs(self.x - other.x) == 1 and abs(self.y - other.y) == 0) or (
+            abs(self.x - other.x) == 0 and abs(self.y - other.y) == 1
+        )
+
 
 class node:
     p: discrete_point
@@ -29,7 +33,7 @@ class node:
     def end(self) -> bool:
         return len(self.neighbours) == 1 and len(self.free_neighbours) == 0
 
-    def connect(self, other: node)-> bool:
+    def connect(self, other: node) -> bool:
         if self.connected() or other.connected():
             return False
 
@@ -55,8 +59,7 @@ def main() -> int:
 
     for x in range(w):
         for y in range(h):
-            nodes.append(node(discrete_point(x, y)))
-
+            nodes.append(node(discrete_point(x + 0.5, y + 0.5)))
 
     def pick_node(nodes: list[node]):
         for n in nodes:
@@ -64,7 +67,6 @@ def main() -> int:
                 return n
 
         return None
-
 
     for n in nodes:
         sel = pick_node(nodes)
@@ -74,19 +76,45 @@ def main() -> int:
             print("all connected")
             break
 
-
     fig = go.Figure()
 
     for n in nodes:
         # Add shapes
 
-        fig.add_shape(type="rect",
-            x0=(n.p.x - 0.5), y0=(n.p.y - 0.5), x1=(n.p.x + 0.5), y1=(n.p.y + 0.5),
-            line=dict(color="RoyalBlue"),
-)
+        fig.add_shape(
+            type="rect",
+            x0=(n.p.x - 0.5),
+            y0=(n.p.y - 0.5),
+            x1=(n.p.x + 0.5),
+            y1=(n.p.y + 0.5),
+            line=dict(color="RoyalBlue", width=2),
+        )
 
+        for nb in n.neighbours:
+            fig.add_shape(
+                type="line",
+                x0=(n.p.x),
+                y0=(n.p.y),
+                x1=(nb.x),
+                y1=(nb.y),
+                line=dict(color="Red", width=2),
+            )
 
+    fig.update_yaxes(scaleanchor="x", scaleratio=1, range=[0, h])
+    fig.update_xaxes(scaleratio=1, range=[0, w])
+
+    fig.update_layout(
+        autosize=False,
+        width=800,
+        height=800,
+        showlegend=False,
+        margin=go.layout.Margin(l=25, r=25, b=25, t=25, pad=10),
+        xaxis=dict(visible=False, fixedrange=True),
+        yaxis=dict(visible=False, fixedrange=True),
+    )
+    fig.show()
     return 0
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(main())  # next section explains the use of sys.exit
