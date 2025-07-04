@@ -1,0 +1,27 @@
+# Hamiltonian Path Generator Configuration
+
+[grid]
+# Grid dimensions
+width = 6
+height = 6
+
+[algorithm]
+# Maximum number of attempts to generate a path
+max_attempts = 20
+
+# Timeout for each attempt in seconds (0 = no timeout)
+timeout_seconds = 30
+
+# Enable verbose output during generation
+verbose = true
+
+# Progress update frequency (backtrack steps)
+progress_update_frequency = 50000
+
+[visualization]
+# Enable visualization after successful generation
+show_visualization = true
+
+# Visualization window size
+window_width = 800
+window_height = 800
